@@ -64,5 +64,80 @@ class UpcomingBills(db.Model):
 
 db.create_all()
 
+@app.route("/sign_on", methods=['POST'])
+def sign_on():
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
+    check_email = Users.query.filter_by(email=email).filter_by(confirmed=True).first()
+    
+    if check_email:
+        return False
+    else:
+        user = Users(username, password, email)
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        session["username"] = username
+        session["email"] = email
+        
+        user = topical_users.query.filter_by(username=session['username']).first()
+        session['user_id'] = user.id
+        
+        return True
+
+@app.route("/sign_in", methods=['POST'])
+def sign_in():
+    username = request.form["username"]
+    passwrd = request.form["password"]
+    
+    user = Users.query.filter_by(username=username).filter_by(password=passwrd).first()
+    
+    if user:
+        session["username"] = user.username
+        session["email"] = user.email
+        session["debt"] = user.debt
+        session["needs"] = user.needs
+        session["wants"] = user.wants
+        session["savings"] = user.savings
+    
+    return check
+
+@app.route("/add_info", methods=['POST'])
+def add_info():
+    wants = request.form["wants"]
+    needs = request.form["needs"]
+    debt = request.form["debt"]
+    savings = request.form["savings"]
+    
+    if username in session:
+        user = Users.query.filter_by(email=session["email"]).first()
+        if user:
+            if not isinstance(needs, int):
+                needs = int(needs)
+            
+            user.needs = needs
+            
+            if not isinstance(wants, int):
+                wants = int(wants)
+            
+            user.wants = wants
+            
+            if not isinstance(savings, int):
+                savings = int(savings)
+            
+            user.savings = savings
+            
+            if not isinstance(debt, int):
+                debt = int(debt)
+            
+            user.debt = debt
+            
+            db.session.commit
+            
+            return True
+    
+
 if __name__ == "__main__":
     app.run(debug = True)
