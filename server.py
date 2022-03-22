@@ -72,7 +72,7 @@ def sign_on():
     check_email = Users.query.filter_by(email=email).filter_by(confirmed=True).first()
     
     if check_email:
-        return "That email is already associated with an account"
+        return False
     else:
         user = Users(username, password, email)
         
@@ -103,6 +103,40 @@ def sign_in():
         session["savings"] = user.savings
     
     return check
+
+@app.route("/add_info", methods=['POST'])
+def add_info():
+    wants = request.form["wants"]
+    needs = request.form["needs"]
+    debt = request.form["debt"]
+    savings = request.form["savings"]
+    
+    if username in session:
+        user = Users.query.filter_by(email=session["email"]).first()
+        if user:
+            if not isinstance(needs, int):
+                needs = int(needs)
+            
+            user.needs = needs
+            
+            if not isinstance(wants, int):
+                wants = int(wants)
+            
+            user.wants = wants
+            
+            if not isinstance(savings, int):
+                savings = int(savings)
+            
+            user.savings = savings
+            
+            if not isinstance(debt, int):
+                debt = int(debt)
+            
+            user.debt = debt
+            
+            db.session.commit
+            
+            return True
     
 
 if __name__ == "__main__":
