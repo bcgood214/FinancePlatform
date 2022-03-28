@@ -1,6 +1,7 @@
 const modal = document.getElementById("myModal");
 const btn = document.getElementById("myBtn");
 const span = document.getElementsByClassName("close")[0];
+
 btn.onclick = function () {
   expName.value = "";
   expNumber.value = "";
@@ -8,9 +9,11 @@ btn.onclick = function () {
   editForm.style.display = "none";
   modal.style.display = "block";
 };
+
 span.onclick = function () {
   modal.style.display = "none";
 };
+
 window.onclick = function (event) {
   if (event.target == modal) {
     modal.style.display = "none";
@@ -39,10 +42,10 @@ let expNumber = document.getElementById("expNumber");
 let id = 0;
 let details = [];
 
-function getBudgetAmount(amount) {
+function getBudgetAmount(amount) {  /*Add Income */
   if (!amount) {
     amountInput.style.border = "1px solid #b80c09";
-    amountInput.placeholder = "input can not be empty";
+    amountInput.placeholder = "Income Amount is required";
     amountInput.style.color = "#b80c09";
     setTimeout(() => {
       amountInput.style.color = "#495057";
@@ -59,25 +62,28 @@ function getBudgetAmount(amount) {
 }
 
 function addExpenses(name, number) {
+  
   if (!name.length || !number.length) {
     expName.style.border = "1px solid #b80c09";
-    expName.placeholder = "input can not be empty";
+    expName.placeholder = "Please enter expense type";
     expName.style.color = "#b80c09";
 
     expNumber.style.border = "1px solid #b80c09";
-    expNumber.placeholder = "input can not be empty";
+    expNumber.placeholder = "Please enter expense amount";
     expNumber.style.color = "#b80c09";
 
     setTimeout(() => {
       expName.style.color = "#495057";
       expName.style.border = "1px solid gray";
-      expName.placeholder = "input can not be empty";
+      expName.placeholder = "Input can not be empty";
 
-      expNumber.placeholder = "input can not be empty";
+      expNumber.placeholder = "Input can not be empty";
       expNumber.style.border = "1px solid gray";
       expNumber.style.color = "#495057";
     }, 3000);
-  } else {
+  }
+  
+  else {
     const userExp = {
       id: id,
       name: name,
@@ -100,8 +106,8 @@ function displayExp(details) {
       <div id="expValueAmount" class="exp"><p> <span>$ </span> ${details[i].number}</p></div>
       <div id="edite_delete">
         <p>
-          <button id="${details[i].id}" onclick="editExpDetails(${details[i].id})"> <img src="image/edit.svg" width="15" alt=""  /></button> 
-          <button id="${details[i].id}" onclick="delExpenseDetails(${details[i].id})"><img src="image/trash.svg" width="15" alt="" /></button>
+          <button id="${details[i].id}" onclick="editExpDetails(${details[i].id})"><img src="../static/images/Update_Icon.jpg" width="20" alt=""  /></button> 
+          <button id="${details[i].id}" onclick="delExpenseDetails(${details[i].id})"><img src="../static/images/Delete_Icon.jpg" width="75" alt="" /></button>
         </p>
       </div>
     </div>
