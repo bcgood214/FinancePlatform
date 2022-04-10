@@ -16,26 +16,26 @@
 
       <div class="container">
         <div class="header"> 
-          <h1>Monthly Budget Planner</h1>
-          <center><p>Plan today for tomorrow</p></center>
-        </div></div>
-
+          <h1>Budget  Planner </h1> 
+          <center><p><strong> Plan </strong><span style="color:#eb9364;font-weight:bold">Today </span> <strong> for</strong> <span style="color:#eb9364;font-weight:bold">Tomorrow </span></p></center>
+          <br></div></div>
 
         <div class="budget-section">
          
           <div class="budget col col-md col-sm">
-            <h2>Income</h2>
+            <h2><span style="color:rgb(73, 73, 78);font-weight:bold">Income</span></h2>
             <p class="amount">$ <span id="budgetAmount">0</span></p>
           </div>
 
           <div class="expenses col col-md col-sm">
-            <h2>Expenses</h2>
+            <h2><span style="color:rgb(73, 73, 78);font-weight:bold">Expenses</span></h2>
             <p class="exp-amount">$ <span id="expensesAmount">0</span></p>
           </div>
           
           <div class="balance col col-md col-sm">
-            <h2>Remaining</h2>
+            <h2><span style="color:rgb(73, 73, 78);font-weight:bold">Remaining</span></h2>
             <p class="amount bala">$ <span id="balanceAmount">0</span></p>
+            
           </div>
         </div>
 
@@ -45,20 +45,19 @@
           <div class="budget-list">
             
             <div class="col">
-              <h3>Category</h3>
+              <h3><span style="color:rgb(73, 73, 78);font-weight:bold">Category</span></h3>
             </div>
             
             <div class="col">
-              <h3>Spent</h3>
+              <h3><span style="color:rgb(73, 73, 78);font-weight:bold">Spent</span></h3>
             </div>
-
-            <div class="col"></div>
-          </div>
+            
+            <div class="col"> <h3><span style="color:rgb(73, 73, 78);font-weight:bold">Action</span></h3></div>
+          </div><br>
           
           <div id="expValue"></div>
         </div>
       </div>
-      
 
       <div class="toggle">
         <button id="myBtn" type="button">+</button>
@@ -69,25 +68,50 @@
        
         <!-- Modal content -->
         <div class="modal-content">
+          
           <div class="modal-header">
             <span class="close">&times;</span>
-            <h2>Tell us a little about you!</h2>
+            <h2><center>Tell us a little about you!</center></h2>
+            <hr class="line">
           </div>
 
           <div class="modal-body">
+
+            <div class="financialg-form" id = "financialgform">
+              <form id="addfinancialg">
+                <label for="">Financial Goals (Choose all that apply)</label> <br><br>
+                <select id="" name="fg" size="4" multiple>
+                  <option value="payofdebt">Pay Off Debt</option>
+                  <option value="saveforretirement">Save for Retirement</option>
+                  <option value="saveforcollege">Save for College</option>
+                  <option value="travel">Travel</option>
+                </select><br><br>
+                <button type="submit">Add</button>
+              </form>
+            </div>
+
             <div class="budget-form" id="budgetform">
-              <form id="addForm">
-                <label for=""> Income amount</label> <br />
+              <form id="addForm"><br>
+                <label for=""> Income Amount</label> <br />
                 <input type="number" id="number" /> <br />
-                <button type="submit">Add income</button>
+                <button type="submit">Add Income</button>
               </form>
             </div>
 
             <div class="expense-form" id="expense-form">
               <form action="" id="expForm">
-                
                 <div class="">
-                  <label for="">Expense Type</label> <br />
+                  <select onchange='location=this.options[this.selectedIndex].value;'>
+                    <option value="" >Select Expense Type</option>
+                    <option value="needs" >Needs</option>
+                    <option value="wants" >Wants</option>
+                    <option value="Savings" >Savings</option>
+                    <option value="debt" >Debt</option>
+                  </select><br><br>
+                </div>
+
+                <div class="">
+                  <label for="">Expense Name</label> <br />
                   <input type="text" id="expName" />
                 </div>
 
@@ -96,11 +120,11 @@
                   <input type="number" id="expNumber" />
                 </div>
 
-                <button type="submit" id="submitExpen">Add expense</button>
+                <button type="submit" id="submitExpen">Add Expense</button>
               </form>
 
               <button onclick="callBudget()" id="bug">
-                Back to add Income ->
+                Back to reset Income
               </button>
 
             </div>

@@ -2,18 +2,22 @@ const modal = document.getElementById("myModal");
 const btn = document.getElementById("myBtn");
 const span = document.getElementsByClassName("close")[0];
 
+// When the user clicks the button, open the modal 
 btn.onclick = function () {
   expName.value = "";
   expNumber.value = "";
   expenseForm.style.display = "block";
+  financialgform.style.display = "none"
   editForm.style.display = "none";
   modal.style.display = "block";
 };
 
+// When the user clicks on <span> (x), close the modal
 span.onclick = function () {
   modal.style.display = "none";
 };
 
+// When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
   if (event.target == modal) {
     modal.style.display = "none";
@@ -21,7 +25,12 @@ window.onclick = function (event) {
 };
 
 const amountInput = document.getElementById("number");
+const selectionInput = document.getElementById("selections");
+
 const addForm = document.getElementById("addForm");
+
+const addfinancialg = document.getElementById("addfinancialg");
+
 const budgetAmount = document.getElementById("budgetAmount");
 const balanceAmount = document.getElementById("balanceAmount");
 
@@ -37,12 +46,14 @@ const displayExpenses = document.getElementById("displayExpenses");
 const expenseForm = document.getElementById("expense-form");
 const budgetform = document.getElementById("budgetform");
 
+const financialgform = document.getElementById("financialgform");
+
 let expName = document.getElementById("expName");
 let expNumber = document.getElementById("expNumber");
 let id = 0;
 let details = [];
 
-function getBudgetAmount(amount) {  /*Add Income */
+function getBudgetAmount(amount) { 
   if (!amount) {
     amountInput.style.border = "1px solid #b80c09";
     amountInput.placeholder = "Income Amount is required";
@@ -55,9 +66,26 @@ function getBudgetAmount(amount) {  /*Add Income */
     budgetAmount.innerText = amount;
     balanceAmount.innerText = amount;
     expenseForm.style.display = "block";
+    financialgform.style.display = "none"
     budgetform.style.display = "none";
     editForm.style.display = "none";
     amountInput.value = "";
+  }
+}
+
+function getfinancialgoal(selections) {  
+  if (!selections) {
+    selectionInput.style.border = "1px solid #b80c09";
+    selectionInput.placeholder = "Income Amount is required";
+    selectionInput.style.color = "#b80c09";
+    setTimeout(() => {
+      selectionInput.style.color = "#495057";
+      selectionInput.style.border = "1px solid gray";
+      selectionInput.placeholder = "Input can not be empty";
+    }, 3000);
+  } else {
+    selectionInput.value = "";
+    financialgform.style.display="none";
   }
 }
 
@@ -94,6 +122,7 @@ function addExpenses(name, number) {
     id++;
     expName.value = "";
     expNumber.value = "";
+    financialgform.style.display = "block"
   }
 }
 
@@ -106,8 +135,8 @@ function displayExp(details) {
       <div id="expValueAmount" class="exp"><p> <span>$ </span> ${details[i].number}</p></div>
       <div id="edite_delete">
         <p>
-          <button id="${details[i].id}" onclick="editExpDetails(${details[i].id})"><img src="../static/images/Update_Icon.jpg" width="20" alt=""  /></button> 
-          <button id="${details[i].id}" onclick="delExpenseDetails(${details[i].id})"><img src="../static/images/Delete_Icon.jpg" width="75" alt="" /></button>
+          <button id="${details[i].id}" onclick="editExpDetails(${details[i].id})"><img src="../static/images/Update_Icon.png" width="30" alt=""  /></button> 
+          <button id="${details[i].id}" onclick="delExpenseDetails(${details[i].id})"><img src="../static/images/Delete_Icon.png" width="60" alt="" /></button>
         </p>
       </div>
     </div>
@@ -140,6 +169,7 @@ function delExpenseDetails(id) {
 function editExpDetails(id) {
   expenseForm.style.display = "none";
   budgetform.style.display = "none";
+  financialgform.style.display ="none";
   editForm.style.display = "block";
   details.findIndex((item) => {
     if (item.id === id) {
@@ -160,6 +190,7 @@ function getExpValue(editExpName, editExpNumber, id) {
 
 function callBudget() {
   budgetform.style.display = "block";
+  financialgform.style.display="none";
   expenseForm.style.display = "none";
 }
 
@@ -176,4 +207,9 @@ expForm.addEventListener("submit", (e) => {
 addForm.addEventListener("submit", (e) => {
   e.preventDefault();
   getBudgetAmount(amountInput.value);
+});
+
+addfinancialg.addEventListener("submit", (e) => {
+  e.preventDefault();
+  getfinancialgoal(selectionInput.value);
 });

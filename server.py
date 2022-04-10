@@ -1,9 +1,12 @@
+from crypt import methods
+from webbrowser import get
 from flask import Flask, request, flash, url_for, redirect, render_template, session, send_file, send_from_directory, safe_join, abort
 from flask_sqlalchemy import SQLAlchemy
 
 MYSQL_URI = "mysql://root@localhost/test"
 
 app = Flask(__name__)
+
 app.secret_key = "secret"
 app.config['SQLALCHEMY_DATABASE_URI'] = MYSQL_URI
 
@@ -63,6 +66,14 @@ class UpcomingBills(db.Model):
         self.value = value
 
 db.create_all()
+
+@app.route("/", methods=['GET'])
+def index():
+   return render_template("index.html")
+
+@app.route("/BudgetPlanner", methods=['GET'])
+def BudgetPlanner():
+   return render_template("createbudget.html")
 
 @app.route("/sign_on", methods=['POST'])
 def sign_on():
