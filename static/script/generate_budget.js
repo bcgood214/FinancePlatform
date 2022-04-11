@@ -131,7 +131,7 @@ function normalizeInd(ind) {
         let i = 0;
 
         while (overflow < 0) {
-            if (ind[i] > 0) {
+            if (ind[i] > 1) {
                 ind[i] -= 1;
                 overflow += 1
             }
@@ -164,7 +164,7 @@ function normalizeInd(ind) {
     return ind;
 }
 
-function mutateBudget(ind, mutLim=30) {
+function mutateBudget(ind, mutLim=60) {
     while (true) {
         let i = getRandomInt(0, 4);
         if (i == 2 && ind[i] == 0) {
@@ -222,7 +222,7 @@ function mutateBudget(ind, mutLim=30) {
 
 } */
 
-function recombine(p1, p2) {
+function recombine(p1, p2, mutProb = 0.01) {
     let child = [];
     let total = 0;
 
@@ -237,6 +237,10 @@ function recombine(p1, p2) {
             total += floor;
             continue;
         }
+
+        /* if (Math.random() < mutProb) {
+            ceiling += getRandomInt(1, 50);
+        } */
 
         let val = getRandomInt(floor, ceiling+1);
         child.push(val);
@@ -260,8 +264,7 @@ function genInd(savings=true, debt=true) {
 
     if (!savings) {
         new_ind[2] = 0;
-        let missing = checkFullness(new_ind);
-        new_ind = fillPlan(new_ind, missing);
+        new_ind = normalizeInd(new_ind);
     }
 
     return mutateBudget(new_ind);
@@ -361,7 +364,7 @@ function getFittest(group) {
     }
 }
 
-function eval(ind, steps, income, goals, priority) {
+/* function eval(ind, steps, income, goals, priority) {
     let needs = (ind[0]/100) * income;
     let wants = (ind[1]/100) * income;
     let savings = (ind[2]/100) * income;
@@ -386,10 +389,37 @@ function eval(ind, steps, income, goals, priority) {
 
     return fitness
 
+} */
+
+function calculateCost(category, income, steps, goal, priority, fitness=100) {
+    let val = (category/100) * income;
+
+    val *= steps;
+
+    if (goal > val) {
+        let loss = goal - val;
+        fitness -= loss * priority;
+    }
+
+    return fitness;
+}
+
+function eval(ind, steps, income, goals, priority) {
+    let fitness = calculateCost(ind[0], income, steps, goals[0], priority[0]);
+
+    for (let i = 1; i < 4; i++) {
+        if (ind[i] == 0) {
+            continue;
+        }
+        fitness = calculateCost(ind[i], income, steps, goals[i], priority[i], fitness);
+    }
+
+    return fitness;
 }
 
 function main(poolSize, gens, savings, debt, subGroupSize, income, costs, months, priority) {
     let pool = genPool(poolSize, savings, debt);
+    let mutProb = 0.05;
 
     for (let i = 0; i < gens; i++) {
         let generation = [];
@@ -420,6 +450,10 @@ function main(poolSize, gens, savings, debt, subGroupSize, income, costs, months
 
             let child = recombine(parentOne[0], parentTwo[0]);
 
+            if (Math.random() < mutProb) {
+                child = mutateBudget(child);
+            }
+
             nextGen.push(child)
 
         }
@@ -431,8 +465,21 @@ function main(poolSize, gens, savings, debt, subGroupSize, income, costs, months
 
         pool = nextGen;
 
+        if (i == gens-1) {
+            console.log(fittest);
+        }
+
 
     }
 
-    return getFittest(pool);
+    console.log(pool)
+
+    let generation = [];
+
+    for (let j = 0; j < pool.length; j++) {
+        let val = eval(pool[j], months, income, costs, priority);
+        generation.push([pool[j], val]);
+    }
+
+    return getFittest(generation);
 }
